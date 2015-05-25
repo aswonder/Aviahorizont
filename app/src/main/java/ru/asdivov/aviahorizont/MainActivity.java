@@ -1,38 +1,59 @@
 package ru.asdivov.aviahorizont;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.widget.Toast;
 
+public class MainActivity extends Activity {
 
-public class MainActivity extends ActionBarActivity {
+    private static SensorManager sensorService;
+    private AviahorizontView aviahorizontView;
+    private Sensor sensor;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        aviahorizontView = new AviahorizontView(this);
+        setContentView(aviahorizontView);
+
+        sensorService = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensor = sensorService.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        if (sensor != null) {
+            sensorService.registerListener(mySensorEventListener, sensor,
+                    SensorManager.SENSOR_DELAY_NORMAL);
+        } else {
+            Toast.makeText(this, "ORIENTATION Sensor not found",
+                    Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    private SensorEventListener mySensorEventListener = new SensorEventListener() {
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            float yaw = event.values[2];
+            float tangage = event.values[1];
+            aviahorizontView.updateData(yaw, tangage);
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (sensor != null) {
+            sensorService.unregisterListener(mySensorEventListener);
+        }
     }
+
 }
