@@ -1,6 +1,9 @@
 package ru.asdivov.aviahorizont;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,9 +15,13 @@ public class AviahorizontView extends View {
     private Paint paint;
     private Paint paintSky;
     private Paint paintGround;
+    private Paint paintPanel;
 
     private float yaw = 0;
     private float tangage = 0;
+    private float pan = 0;
+
+    private Bitmap mBitmapArrow;
 
     public AviahorizontView(Context context) {
         super(context);
@@ -40,6 +47,15 @@ public class AviahorizontView extends View {
         paintGround.setStrokeWidth(2);
         paintGround.setStyle(Paint.Style.FILL);
         paintGround.setColor(Color.parseColor("#aa5d39"));
+
+        paintPanel = new Paint();
+        paintPanel.setAntiAlias(true);
+        paintPanel.setStrokeWidth(2);
+        paintPanel.setStyle(Paint.Style.FILL);
+        paintPanel.setColor(Color.DKGRAY);
+
+        Resources res = this.getResources();
+        mBitmapArrow = BitmapFactory.decodeResource(res, R.drawable.arrow);
     }
 
     @Override
@@ -47,7 +63,7 @@ public class AviahorizontView extends View {
         int xPoint = getMeasuredWidth() / 2;
         int yPoint = getMeasuredHeight() / 2;
 
-        float radius = (float) (Math.min(xPoint, yPoint) * 0.95);
+        float radius = (float) (Math.min(xPoint, yPoint) * 0.75);
         canvas.drawCircle(xPoint, yPoint, radius, paint);
         canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), paint);
 
@@ -62,6 +78,7 @@ public class AviahorizontView extends View {
                 (float) (yPoint + radius
                         * Math.cos((double) (-yaw + 90 + tangage) / 180 * 3.143)), paint);
 
+        canvas.drawCircle(xPoint, yPoint, radius * 1.2f, paintPanel);
         canvas.drawCircle(xPoint, yPoint, radius, paintSky);
 
         final RectF rectf = new RectF();
@@ -73,13 +90,48 @@ public class AviahorizontView extends View {
 
         canvas.drawArc(rectf, startAngle, sweepAngle, false, paintGround);
 
+        canvas.save();
+        canvas.rotate(-pan,
+                (float) (xPoint + radius
+                        * Math.sin((double) (-pan) / 180 * 3.143)),
+                (float) (yPoint - radius
+                        * Math.cos((double) (-pan) / 180 * 3.143)));
+
+        canvas.drawBitmap(mBitmapArrow,
+                (float) (xPoint + radius
+                        * Math.sin((double) (-pan) / 180 * 3.143)),
+                (float) (yPoint - radius
+                        * Math.cos((double) (-pan) / 180 * 3.143)),
+                paint);
+        canvas.restore();
+
+
+        for(int i = 0; i < 360; i = i + 30){
+            canvas.save();
+            canvas.rotate(-i,
+                    (float) (xPoint + radius * 1.05f
+                    * Math.sin((double) (-i) / 180 * 3.143)),
+                    (float) (yPoint - radius * 1.05f
+                    * Math.cos((double) (-i) / 180 * 3.143)));
+
+            canvas.drawText(
+                    String.valueOf(i),
+                    (float) (-10 + xPoint + radius * 1.05f
+                    * Math.sin((double) (-i) / 180 * 3.143)),
+                    (float) (yPoint - radius * 1.05f
+                            * Math.cos((double) (-i) / 180 * 3.143)),
+                    paint);
+            canvas.restore();
+        }
+
         canvas.drawText("YAW: " + String.valueOf(yaw), xPoint, yPoint, paint);
         canvas.drawText("TAN: " + String.valueOf(tangage), xPoint, yPoint+30, paint);
     }
 
-    public void updateData(float yaw, float tangage) {
+    public void updateData(float yaw, float tangage, float pan) {
         this.yaw = yaw;
         this.tangage = tangage;
+        this.pan = pan;
         invalidate();
     }
 
