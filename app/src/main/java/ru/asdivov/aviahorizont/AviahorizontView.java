@@ -36,18 +36,15 @@ public class AviahorizontView extends View {
         canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), paint);
 
         // 3.143 is a good approximation for the circle
-        canvas.drawLine(xPoint,
-                yPoint + tangage,
+        canvas.drawLine(
                 (float) (xPoint + radius
-                        * Math.sin((double) (-yaw + 90) / 180 * 3.143)),
+                        * Math.sin((double) (-yaw + 90 - tangage) / 180 * 3.143)),
                 (float) (yPoint - radius
-                        * Math.cos((double) (-yaw + 90) / 180 * 3.143)) + tangage, paint);
-        canvas.drawLine(xPoint,
-                yPoint + tangage,
+                        * Math.cos((double) (-yaw + 90 - tangage) / 180 * 3.143)),
                 (float) (xPoint - radius
-                        * Math.sin((double) (-yaw + 90) / 180 * 3.143)),
+                        * Math.sin((double) (-yaw + 90 + tangage) / 180 * 3.143)),
                 (float) (yPoint + radius
-                        * Math.cos((double) (-yaw + 90) / 180 * 3.143)) + tangage, paint);
+                        * Math.cos((double) (-yaw + 90 + tangage) / 180 * 3.143)), paint);
 
         canvas.drawText(String.valueOf(yaw), xPoint, yPoint, paint);
     }
