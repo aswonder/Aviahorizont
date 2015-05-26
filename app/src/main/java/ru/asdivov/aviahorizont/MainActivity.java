@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
         sensor = sensorService.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         if (sensor != null) {
             sensorService.registerListener(mySensorEventListener, sensor,
-                    SensorManager.SENSOR_DELAY_NORMAL);
+                    SensorManager.SENSOR_DELAY_FASTEST);
         } else {
             Toast.makeText(this, "ORIENTATION Sensor not found",
                     Toast.LENGTH_LONG).show();
