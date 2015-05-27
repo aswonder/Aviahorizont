@@ -117,7 +117,7 @@ public class AviahorizontView extends View {
 
             canvas.drawText(
                     String.valueOf(i),
-                    (float) (-10 + xPoint + radius * 1.05f
+                    (float) (xPoint + radius * 1.05f
                     * Math.sin((double) (-i) / 180 * 3.143)),
                     (float) (yPoint - radius * 1.05f
                             * Math.cos((double) (-i) / 180 * 3.143)),
@@ -127,6 +127,7 @@ public class AviahorizontView extends View {
 
         canvas.drawText("YAW: " + String.format("%2.1f" , -yaw), xPoint, yPoint, paint);
         canvas.drawText("TAN: " + String.format("%2.1f" , -tangage), xPoint, yPoint+30, paint);
+        canvas.drawText("PAN: " + String.format("%2.1f" , pan), xPoint, yPoint+60, paint);
     }
 
     public void updateData(float yaw, float tangage, float pan) {
