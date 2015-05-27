@@ -40,13 +40,13 @@ public class AviahorizontView extends View {
         paintSky.setAntiAlias(true);
         paintSky.setStrokeWidth(2);
         paintSky.setStyle(Paint.Style.FILL);
-        paintSky.setColor(Color.parseColor("#19b2c0"));
+        paintSky.setColor(Color.parseColor("#4bb4e6"));
 
         paintGround = new Paint();
         paintGround.setAntiAlias(true);
         paintGround.setStrokeWidth(2);
         paintGround.setStyle(Paint.Style.FILL);
-        paintGround.setColor(Color.parseColor("#aa5d39"));
+        paintGround.setColor(Color.parseColor("#936d4f"));
 
         paintPanel = new Paint();
         paintPanel.setAntiAlias(true);
@@ -85,8 +85,8 @@ public class AviahorizontView extends View {
         rectf.set(xPoint - radius, yPoint - radius, xPoint + radius,
                 yPoint + radius);
 
-        Float startAngle = - yaw - tangage / 2;
-        Float sweepAngle = 180 + tangage;
+        Float startAngle = - yaw - tangage;
+        Float sweepAngle = 180 + tangage * 2;
 
         canvas.drawArc(rectf, startAngle, sweepAngle, false, paintGround);
 
@@ -124,13 +124,15 @@ public class AviahorizontView extends View {
             canvas.restore();
         }
 
-        canvas.drawText("YAW: " + String.valueOf(yaw), xPoint, yPoint, paint);
-        canvas.drawText("TAN: " + String.valueOf(tangage), xPoint, yPoint+30, paint);
+        canvas.drawText("YAW: " + String.format("%2.1f" , -yaw), xPoint, yPoint, paint);
+        canvas.drawText("TAN: " + String.format("%2.1f" , -tangage), xPoint, yPoint+30, paint);
     }
 
     public void updateData(float yaw, float tangage, float pan) {
         this.yaw = yaw;
         this.tangage = tangage;
+        if (this.tangage + 180 < 0 && this.tangage + 90 < 0)
+            this.tangage = 360 + this.tangage;
         this.pan = pan;
         invalidate();
     }
