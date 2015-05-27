@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onSensorChanged(SensorEvent event) {
-            float yaw = event.values[2];
+             float yaw = event.values[2];
             float tangage = event.values[1];
             float pan = event.values[0];
             aviahorizontView.updateData(yaw, tangage, pan);

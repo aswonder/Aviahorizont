@@ -33,6 +33,7 @@ public class AviahorizontView extends View {
         paint.setAntiAlias(true);
         paint.setStrokeWidth(2);
         paint.setTextSize(25);
+        paint.setTextAlign(Paint.Align.CENTER);
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.WHITE);
 
@@ -116,7 +117,7 @@ public class AviahorizontView extends View {
 
             canvas.drawText(
                     String.valueOf(i),
-                    (float) (-10 + xPoint + radius * 1.05f
+                    (float) (xPoint + radius * 1.05f
                     * Math.sin((double) (-i) / 180 * 3.143)),
                     (float) (yPoint - radius * 1.05f
                             * Math.cos((double) (-i) / 180 * 3.143)),
@@ -124,8 +125,9 @@ public class AviahorizontView extends View {
             canvas.restore();
         }
 
-        canvas.drawText("YAW: " + String.valueOf(yaw), xPoint, yPoint, paint);
-        canvas.drawText("TAN: " + String.valueOf(tangage), xPoint, yPoint+30, paint);
+        canvas.drawText("YAW: " + String.format("%.1f",- yaw), xPoint, yPoint, paint);
+        canvas.drawText("TAN: " + String.format("%.1f", -tangage), xPoint, yPoint+30, paint);
+        canvas.drawText("PAN: " + String.format("%.1f", pan), xPoint, yPoint+60, paint);
     }
 
     public void updateData(float yaw, float tangage, float pan) {
