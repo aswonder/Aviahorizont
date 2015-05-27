@@ -33,7 +33,8 @@ public class AviahorizontView extends View {
         paint.setAntiAlias(true);
         paint.setStrokeWidth(2);
         paint.setTextSize(25);
-        paint.setStyle(Paint.Style.STROKE);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.WHITE);
 
         paintSky = new Paint();
